@@ -1,0 +1,33 @@
+name: publish
+
+# Builds the image from the Dockerfile and pushes it to ghcr.io/sarbian/ksp-ci. Pushing from this repository with its own
+# GITHUB_TOKEN is what links the package to it, so its Actions access settings can grant other repositories pulls.
+on:
+  push:
+    branches: [main]
+    paths: ['Dockerfile', '.github/workflows/publish.yml']
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Log in to ghcr.io
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u "${{ github.actor }}" --password-stdin
+
+      - name: Build
+        run: docker build -t ghcr.io/sarbian/ksp-ci:26.04 .
+
+      - name: Push
+        run: |
+          for tag in 26.04 latest; do
+            docker tag ghcr.io/sarbian/ksp-ci:26.04 "ghcr.io/sarbian/ksp-ci:$tag"
+            docker push "ghcr.io/sarbian/ksp-ci:$tag"
+          done
