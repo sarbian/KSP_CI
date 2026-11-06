@@ -11,3 +11,6 @@ RUN apt-get update -qq \
  && rm -rf /var/lib/apt/lists/*
 
 RUN mono --version | head -1
+
+# Links the package to this repository on ghcr.io, so its Actions access settings can grant other repos pulls.
+LABEL org.opencontainers.image.source="https://github.com/sarbian/KSP_CI"
