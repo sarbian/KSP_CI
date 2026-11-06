@@ -6,7 +6,7 @@ FROM ubuntu:26.04
 ENV DEBIAN_FRONTEND=noninteractive
 
 RUN apt-get update -qq \
- && apt-get install -y -qq mono-complete git curl unzip zip ca-certificates sudo \
+ && apt-get install -y -qq mono-complete git curl unzip zip ca-certificates sudo libicu-dev \
  && apt-get clean \
  && rm -rf /var/lib/apt/lists/*
 
